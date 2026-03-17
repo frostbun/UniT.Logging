@@ -17,7 +17,7 @@ namespace UniT.Logging
 
         ILogger ILoggerManager.GetLogger(string name)
         {
-            return this.loggers.GetOrAdd(name, () => this.CreateLogger(name, this.logLevel));
+            return this.loggers.GetOrAdd(name, state => state.@this.CreateLogger(state.name, state.@this.logLevel), (@this: this, name));
         }
 
         IEnumerable<ILogger> ILoggerManager.GetAllLoggers()
