@@ -2,7 +2,6 @@
 namespace UniT.Logging
 {
     using System.Collections.Generic;
-    using UniT.Extensions;
 
     public abstract class LoggerManager : ILoggerManager
     {
@@ -17,7 +16,10 @@ namespace UniT.Logging
 
         ILogger ILoggerManager.GetLogger(string name)
         {
-            return this.loggers.GetOrAdd(name, static state => state.@this.CreateLogger(state.name, state.@this.logLevel), (@this: this, name));
+            if (this.loggers.TryGetValue(name, out var logger)) return logger;
+            logger = this.CreateLogger(name, this.logLevel);
+            this.loggers.Add(name, logger);
+            return logger;
         }
 
         IEnumerable<ILogger> ILoggerManager.GetAllLoggers()
